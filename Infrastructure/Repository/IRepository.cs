@@ -9,7 +9,7 @@ namespace Infrastructure.Repository
     {
         public DbSet<T> ObjectSet { get; }
         Task<IEnumerable<T>> GetAll();
-        Task<IActionResult> Add(T entity);
+        Task<int> Add(T entity);
         void Delete(T entity);
         void Edit(T entity);
         Task<IEnumerable<T>> GetById(Guid id);

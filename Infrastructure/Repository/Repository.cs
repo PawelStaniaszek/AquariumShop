@@ -25,9 +25,10 @@ namespace Infrastructure.Repository
             get { return _objectSet; }
         }
 
-        public async Task<IActionResult> Add(T entity)
+        public async Task<int> Add(T entity)
         {
-            return (IActionResult)await _objectSet.AddAsync(entity);
+            await _objectSet.AddAsync(entity);
+            return await db.SaveChangesAsync();
         }
 
         public void Delete(T entity)

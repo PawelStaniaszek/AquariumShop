@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
 using System.Reflection;
+using AquariumShop.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,11 @@ builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
 builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
 builder.Services.AddScoped<IProductRepository<Product>, ProductRepository>();
 
+builder.Services.AddScoped<ISeeder<Category>, CategorySeeder>();
+builder.Services.AddScoped<ISeeder<Product>, ProductSeeder>();
+
+
+
 
 builder.Services.AddCors(c =>
 {
@@ -34,9 +40,19 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    using (var scope = app.Services.CreateScope())
+    {
+        var categorySeeder = scope.ServiceProvider.GetRequiredService<ISeeder<Category>>();
+        await categorySeeder.SeedAsync();
+
+        var productSeeder = scope.ServiceProvider.GetRequiredService<ISeeder<Product>>();
+        await productSeeder.SeedAsync();
+    }
 }
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseHttpsRedirection();
+
+
 
 app.UseAuthorization();
 
