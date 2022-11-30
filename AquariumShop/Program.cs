@@ -1,7 +1,6 @@
 using Domain.Models;
 using Infrastructure;
 using Infrastructure.Repository;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
 using System.Reflection;
@@ -25,9 +24,6 @@ builder.Services.AddScoped<IProductRepository<Product>, ProductRepository>();
 
 builder.Services.AddScoped<ISeeder<Category>, CategorySeeder>();
 builder.Services.AddScoped<ISeeder<Product>, ProductSeeder>();
-
-
-
 
 builder.Services.AddCors(c =>
 {
