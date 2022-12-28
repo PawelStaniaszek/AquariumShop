@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using System.Reflection;
 using AquariumShop.Seed;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AquariumDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
+
+builder.Services.AddAuthentication();
+
+builder.Services.AddIdentityCore<ApiUser>(q => q.User.RequireUniqueEmail = true)
+    .AddEntityFrameworkStores<AquariumDbContext>()
+    .AddDefaultTokenProviders();
+
+
+
 
 builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
 builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();

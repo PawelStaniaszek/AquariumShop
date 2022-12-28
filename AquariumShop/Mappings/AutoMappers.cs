@@ -15,6 +15,7 @@ namespace AquariumShop.Mappings
                 .ForMember(a => a.Opis_dlugi, b => b.MapFrom(t => t.LongDescription))
                 .ForMember(a => a.obrazek, b => b.MapFrom(t => t.Picture));
 
+            CreateMap<ApiUser, UserDTO>().ReverseMap();
             CreateMap<Category, CategoryDto>();
         }
     }
