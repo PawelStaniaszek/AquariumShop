@@ -34,14 +34,14 @@ namespace Services.User
 
         public async Task<string> Login(string email, string password)
         {
-            SignInResult loginResoult;
+            SignInResult loginResult;
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
                 return null;
 
-            loginResoult = await _signInManager.PasswordSignInAsync(user, password, false, false);
+            loginResult = await _signInManager.PasswordSignInAsync(user, password, false, false);
 
-            if (loginResoult.Succeeded)
+            if (loginResult.Succeeded)
             {
                 var claims = GenerateClaims(user);
 
@@ -50,7 +50,7 @@ namespace Services.User
                         _configuration["Jwt:Audience"],
                         claims,
                         notBefore: DateTime.Now,
-                        expires: DateTime.Now.AddDays(2),
+                        expires: DateTime.Now.AddSeconds(10),
                         GenerateSigningCredential()
                     );
                 return new JwtSecurityTokenHandler().WriteToken(token);
@@ -71,7 +71,9 @@ namespace Services.User
 
         public async Task<IdentityResult> Register(ApiUser user, string password)
         {
-            return await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(user, password);
+            await _userManager.AddToRoleAsync(user, "User");
+            return result;
         }
     }
 }

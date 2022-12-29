@@ -7,6 +7,12 @@ using System.Reflection;
 using AquariumShop.Seed;
 using Microsoft.AspNetCore.Identity;
 using Services.User;
+using AspNet.Security.OAuth.Validation;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using AquariumShop.Config;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,13 +22,28 @@ builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
+SwaggerConfig.Handle(builder);
 
 builder.Services.AddDbContext<AquariumDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
 
-builder.Services.AddAuthentication();
+builder.Services.AddAuthentication()
+    //.AddCookie("Identity.Application")
+    .AddJwtBearer(config =>
+    {
+        config.TokenValidationParameters = new TokenValidationParameters()
+        {
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidateLifetime = true,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true
+        };
+    });
 
-builder.Services.AddIdentityCore<ApiUser>(x => {
+builder.Services.AddIdentity<ApiUser, IdentityRole>(x => {
     x.Password.RequireDigit = false;
     x.Password.RequiredLength = 2;
     x.Password.RequireUppercase = false;
@@ -67,6 +88,8 @@ if (app.Environment.IsDevelopment())
 
         var productSeeder = scope.ServiceProvider.GetRequiredService<ISeeder<Product>>();
         await productSeeder.SeedAsync();
+
+        await new RoleSeeder().Seed(app.Services.CreateScope().ServiceProvider);
     }
 }
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

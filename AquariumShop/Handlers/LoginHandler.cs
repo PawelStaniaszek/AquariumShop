@@ -15,9 +15,14 @@ namespace AquariumShop.Handlers
             _accountService = accountService;
         }
 
-        public Task<ActionResult<TokenDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<ActionResult<TokenDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var token = await _accountService.Login(request.Email, request.Password);
+
+            if (token == null)
+                return new BadRequestObjectResult("User not exists or password didn't match");
+
+            return new OkObjectResult(new TokenDto() { Token = "Bearer " + token, });
         }
     }
 }

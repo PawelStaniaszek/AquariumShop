@@ -22,7 +22,7 @@ namespace AquariumShop.Controllers
             return await _mediator.Send(command, CancellationToken.None);
         }
 
-        [HttpGet("Login")]
+        [HttpPost("Login")]
         public async Task<ActionResult<TokenDto>> Login([FromBody] LoginCommand command)
         {
             return await _mediator.Send(command, CancellationToken.None);
