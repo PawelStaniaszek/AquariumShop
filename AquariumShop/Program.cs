@@ -6,6 +6,7 @@ using MediatR;
 using System.Reflection;
 using AquariumShop.Seed;
 using Microsoft.AspNetCore.Identity;
+using Services.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,16 +22,29 @@ builder.Services.AddDbContext<AquariumDbContext>(options => options.UseSqlServer
 
 builder.Services.AddAuthentication();
 
-builder.Services.AddIdentityCore<ApiUser>(q => q.User.RequireUniqueEmail = true)
+builder.Services.AddIdentityCore<ApiUser>(x => {
+    x.Password.RequireDigit = false;
+    x.Password.RequiredLength = 2;
+    x.Password.RequireUppercase = false;
+    x.Password.RequireLowercase = false;
+    x.Password.RequireNonAlphanumeric = false;
+    x.Password.RequiredUniqueChars = 0;
+    x.Lockout.AllowedForNewUsers = true;
+    x.Lockout.MaxFailedAccessAttempts = 5;
+    x.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
+    x.SignIn.RequireConfirmedAccount = false;
+})
     .AddEntityFrameworkStores<AquariumDbContext>()
+    .AddSignInManager<SignInManager<ApiUser>>()
     .AddDefaultTokenProviders();
 
-
+//builder.Services.AddScoped<SignInManager<ApiUser>>();
 
 
 builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
 builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
 builder.Services.AddScoped<IProductRepository<Product>, ProductRepository>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddScoped<ISeeder<Category>, CategorySeeder>();
 builder.Services.AddScoped<ISeeder<Product>, ProductSeeder>();
