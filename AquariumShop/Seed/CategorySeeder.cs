@@ -18,10 +18,10 @@ namespace AquariumShop.Seed
             var existingCategory = await _categoryRepository.GetAll();
             if (!existingCategory.Any())
             {
-                await _categoryRepository.Add(new Category { Id = Guid.NewGuid(), Name = "Akcesoria" });
-                await _categoryRepository.Add(new Category { Id = Guid.NewGuid(), Name = "Zestawy" });
-                await _categoryRepository.Add(new Category { Id = Guid.NewGuid(), Name = "Akwaria" });
-                await _categoryRepository.Add(new Category { Id = Guid.NewGuid(), Name = "Rośliny" });
+                await _categoryRepository.AddAsync(new Category { Id = Guid.NewGuid(), Name = "Akcesoria" });
+                await _categoryRepository.AddAsync(new Category { Id = Guid.NewGuid(), Name = "Zestawy" });
+                await _categoryRepository.AddAsync(new Category { Id = Guid.NewGuid(), Name = "Akwaria" });
+                await _categoryRepository.AddAsync(new Category { Id = Guid.NewGuid(), Name = "Rośliny" });
             }
         }
     }

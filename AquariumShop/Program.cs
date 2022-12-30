@@ -64,6 +64,7 @@ builder.Services.AddIdentity<ApiUser, IdentityRole>(x => {
 
 builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
 builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
+builder.Services.AddScoped<IRepository<Cart>, Repository<Cart>>();
 builder.Services.AddScoped<IProductRepository<Product>, ProductRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 

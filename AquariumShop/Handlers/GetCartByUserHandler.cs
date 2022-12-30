@@ -1,23 +1,28 @@
 ﻿using AquariumShop.Dtos;
 using AquariumShop.Queries;
+using AutoMapper;
 using Domain.Models;
 using Infrastructure.Repository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace AquariumShop.Handlers
 {
     public class GetCartByUserHandler : IRequestHandler<GetCartByUserQuery, IEnumerable<ProductDto>>
     {
-        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<Cart> _cartRepository;
+        private readonly IMapper _mapper;
 
-        public GetCartByUserHandler(IRepository<Product> productRepository)
+        public GetCartByUserHandler(IRepository<Cart> cartRepository, IMapper mapper)
         {
-            _productRepository = productRepository;
+            _cartRepository = cartRepository;
+            _mapper = mapper;
         }
 
-        public Task<IEnumerable<ProductDto>> Handle(GetCartByUserQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ProductDto>> Handle(GetCartByUserQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var query = _cartRepository.ObjectSet.Where(x => x.UserId == request.UserId).Include(x => x.Product);
+            return _mapper.Map<IEnumerable<ProductDto>>(query);
         }
     }
 }

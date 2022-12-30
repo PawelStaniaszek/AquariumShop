@@ -7,17 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AquariumShop.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductController
+    public class ProductController : BaseController
     {
-        private readonly IMediator _mediator;
-
-        public ProductController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        
+        public ProductController(IMediator mediator) : base(mediator) { }
 
         [HttpGet]
         public async Task<IEnumerable<ProductDto>> Get()

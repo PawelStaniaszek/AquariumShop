@@ -1,29 +1,57 @@
-﻿using AquariumShop.Dtos;
+﻿using AquariumShop.Commands;
+using AquariumShop.Dtos;
 using AquariumShop.Queries;
+using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AquariumShop.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
-    public class CartController : ControllerBase
+    public class CartController : BaseController
     {
-        private readonly IMediator _mediator;
+        
+        public CartController(IMediator mediator): base(mediator) { }
 
-        public CartController(IMediator mediator)
+        [HttpGet]
+        public async Task<IEnumerable<ProductDto>> GetCartByUser()
         {
-            _mediator = mediator;
+            var userId = this.GetUserGuidFromRequest();
+
+            if (userId == null)
+            {
+                return (IEnumerable<ProductDto>)BadRequest("User doesn't exist");
+            }
+            else
+            {
+                var query = new GetCartByUserQuery();
+                query.UserId = userId;
+                return await _mediator.Send(query);
+            }
         }
 
-        [HttpGet("UserId")]
-        public async Task<IEnumerable<ProductDto>> GetCartByUser([FromQuery] Guid userId)
+        [HttpPost]
+        public async Task<IActionResult> AddProductToCart([FromQuery] Guid productId)
         {
-            return await _mediator.Send(new GetCartByUserQuery());
+            var userId = this.GetUserGuidFromRequest();
+
+            if (userId == null)
+            {
+                return BadRequest("User doesn't exist");
+            }
+            else
+            {
+                var command = new AddProductToCartCommand();
+                command.ProductId = productId;
+                command.UserId = userId;
+                return await _mediator.Send(command);
+            }
+            
         }
     }
 }
