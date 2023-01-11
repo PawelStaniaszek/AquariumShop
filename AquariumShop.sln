@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{B8906D8F-287C-40CA-819D-A52915C7ADD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{C4BF6603-96C3-4703-9E34-820EE84739C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{C4BF6603-96C3-4703-9E34-820EE84739C0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CA38C1AB-A9CA-4548-8AFE-A168F3839116}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AquariumShop.IntegrationTests", "Tests\AquariumShop.IntegrationTests\AquariumShop.IntegrationTests.csproj", "{A4C1439E-45A7-4949-AC44-44AE9C0677CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +37,16 @@ Global
 		{C4BF6603-96C3-4703-9E34-820EE84739C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4BF6603-96C3-4703-9E34-820EE84739C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4BF6603-96C3-4703-9E34-820EE84739C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4C1439E-45A7-4949-AC44-44AE9C0677CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4C1439E-45A7-4949-AC44-44AE9C0677CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4C1439E-45A7-4949-AC44-44AE9C0677CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4C1439E-45A7-4949-AC44-44AE9C0677CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A4C1439E-45A7-4949-AC44-44AE9C0677CB} = {CA38C1AB-A9CA-4548-8AFE-A168F3839116}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {960A812C-2741-4465-8D94-1F2C38C15C96}

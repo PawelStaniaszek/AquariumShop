@@ -1,12 +1,11 @@
 ﻿using AquariumShop.Commands;
 using AquariumShop.Dtos;
 using AquariumShop.Queries;
-using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace AquariumShop.Controllers
 {
@@ -16,16 +15,16 @@ namespace AquariumShop.Controllers
     public class CartController : BaseController
     {
         
-        public CartController(IMediator mediator): base(mediator) { }
+        public CartController(IMediator mediator) : base(mediator) { }
 
         [HttpGet]
-        public async Task<IEnumerable<ProductDto>> GetCartByUser()
+        public async Task<IEnumerable<ProductForCartDto>> GetCartByUser()
         {
             var userId = this.GetUserGuidFromRequest();
 
             if (userId == null)
             {
-                return (IEnumerable<ProductDto>)BadRequest("User doesn't exist");
+                return (IEnumerable<ProductForCartDto>)BadRequest("User doesn't exist");
             }
             else
             {
@@ -36,7 +35,7 @@ namespace AquariumShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProductToCart([FromQuery] Guid productId)
+        public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCartCommand command)
         {
             var userId = this.GetUserGuidFromRequest();
 
@@ -46,12 +45,27 @@ namespace AquariumShop.Controllers
             }
             else
             {
-                var command = new AddProductToCartCommand();
-                command.ProductId = productId;
                 command.UserId = userId;
                 return await _mediator.Send(command);
             }
             
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteProductFromCart([FromQuery] Guid productId)
+        {
+            var userId = this.GetUserGuidFromRequest();
+            if(userId == null)
+            {
+                return BadRequest("User doesn't exist");
+            }
+            else
+            {
+                var command = new DeleteProductFromCartCommand();
+                command.UserId = userId;
+                command.ProductId = productId;
+                return await _mediator.Send(command);
+            }
         }
     }
 }

@@ -20,16 +20,17 @@ namespace Infrastructure.Repository
             get { return _objectSet; }
         }
 
-        public async Task<IActionResult> AddAsync(T entity)
+        public async Task<int> AddAsync(T entity)
         {
-            var result = await _objectSet.AddAsync(entity);
-            await db.SaveChangesAsync();
-            return (IActionResult)result;
+            await _objectSet.AddAsync(entity);
+            
+            return await db.SaveChangesAsync();
         }
 
         public void Delete(T entity)
         {
             _objectSet.Remove(entity);
+            db.SaveChangesAsync();
         }
 
         public void Edit(T entity)
@@ -55,9 +56,9 @@ namespace Infrastructure.Repository
             return (IEnumerable<T>)query;
         }
 
-        public async Task<IEnumerable<T>> GetById(Guid id)
+        public async Task<T> GetById(Guid id)
         {
-            var result = await ObjectSet.Where(a => a.Id == id).ToListAsync();
+            var result = await ObjectSet.FirstOrDefaultAsync(a => a.Id == id);
             return result;
         }
     }

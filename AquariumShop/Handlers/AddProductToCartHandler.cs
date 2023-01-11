@@ -22,8 +22,14 @@ namespace AquariumShop.Handlers
                 Id = new Guid(),
                 UserId = request.UserId,
                 ProductId = request.ProductId,
+                Quantity = request.Quantity,
             };
-            return await _cartRepository.AddAsync(cart);
+            var result = await _cartRepository.AddAsync(cart);
+            if(result == 1)
+            {
+                return new OkResult();
+            }else return new BadRequestObjectResult(result);
+            
         }
     }
 }

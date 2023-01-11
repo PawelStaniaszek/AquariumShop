@@ -15,13 +15,13 @@ namespace AquariumShop.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterCommand command)
         {
-            return await _mediator.Send(command, CancellationToken.None);
+            return await _mediator.Send(command);
         }
 
         [HttpPost("Login")]
         public async Task<ActionResult<TokenDto>> Login([FromBody] LoginCommand command)
         {
-            return await _mediator.Send(command, CancellationToken.None);
+            return await _mediator.Send(command);
         }
     }
 }
