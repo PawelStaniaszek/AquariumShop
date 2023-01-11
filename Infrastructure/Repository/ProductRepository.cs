@@ -35,9 +35,9 @@ namespace Infrastructure.Repository
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Product>> GetAll()
+        public async Task<IEnumerable<Product>> GetAll()
         {
-            throw new NotImplementedException();
+            return await ObjectSet.Include(x=> x.Category).ToListAsync();
         }
 
         public Task<IEnumerable<Product>> GetAllIncluding(Expression<Func<Product, object>>[] include)
@@ -47,13 +47,19 @@ namespace Infrastructure.Repository
 
         public async Task<IEnumerable<Product>> GetById(Guid id)
         {
-            var result = await ObjectSet.Where(a => a.CategoryId.Equals(id)).ToListAsync();
+            var result = await ObjectSet.Include(x => x.Category).Where(a => a.CategoryId.Equals(id)).ToListAsync();
             return result;
         }
 
         public Task<Product> GetDetail(Expression<Func<Product, bool>> predicate)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Product>> GetByName(string name)
+        {
+            var result = await ObjectSet.Include(x => x.Category).Where(a => a.Category.Name.Equals(name)).ToListAsync();
+            return result;
         }
     }
 }

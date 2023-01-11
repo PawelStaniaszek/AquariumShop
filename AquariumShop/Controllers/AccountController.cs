@@ -8,24 +8,20 @@ namespace AquariumShop.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController
+    public class AccountController : BaseController
     {
-        private readonly IMediator _mediator;
+        public AccountController(IMediator mediator) : base(mediator) { }
 
-        public AccountController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterCommand command)
         {
-            return await _mediator.Send(command, CancellationToken.None);
+            return await _mediator.Send(command);
         }
 
         [HttpPost("Login")]
         public async Task<ActionResult<TokenDto>> Login([FromBody] LoginCommand command)
         {
-            return await _mediator.Send(command, CancellationToken.None);
+            return await _mediator.Send(command);
         }
     }
 }

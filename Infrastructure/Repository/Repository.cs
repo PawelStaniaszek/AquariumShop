@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using Domain.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Infrastructure.Repository
 {
@@ -19,15 +20,17 @@ namespace Infrastructure.Repository
             get { return _objectSet; }
         }
 
-        public async Task<int> Add(T entity)
+        public async Task<int> AddAsync(T entity)
         {
             await _objectSet.AddAsync(entity);
+            
             return await db.SaveChangesAsync();
         }
 
         public void Delete(T entity)
         {
             _objectSet.Remove(entity);
+            db.SaveChangesAsync();
         }
 
         public void Edit(T entity)
@@ -53,9 +56,9 @@ namespace Infrastructure.Repository
             return (IEnumerable<T>)query;
         }
 
-        public async Task<IEnumerable<T>> GetById(Guid id)
+        public async Task<T> GetById(Guid id)
         {
-            var result = await ObjectSet.Where(a => a.Id == id).ToListAsync();
+            var result = await ObjectSet.FirstOrDefaultAsync(a => a.Id == id);
             return result;
         }
     }

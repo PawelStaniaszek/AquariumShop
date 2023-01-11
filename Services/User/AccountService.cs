@@ -50,7 +50,7 @@ namespace Services.User
                         _configuration["Jwt:Audience"],
                         claims,
                         notBefore: DateTime.Now,
-                        expires: DateTime.Now.AddSeconds(10),
+                        expires: DateTime.Now.AddMinutes(30),
                         GenerateSigningCredential()
                     );
                 return new JwtSecurityTokenHandler().WriteToken(token);
